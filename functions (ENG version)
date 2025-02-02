@@ -1,0 +1,352 @@
+class Employees():
+    def __init__(self):
+        self.information = Information()
+        self.evaluation = Evaluation()
+        self.payment = Payment()
+        self.previous_employee = None
+        self.next_employee = None
+
+class Information():
+    def __init__(self):
+        self.name = None
+        self.age = None
+        self.role = None
+        self.salary = None
+        self.total_salary = None
+        self.schedule = None
+        self.status = None
+
+class Evaluation():
+    def __init__(self):
+        self.grade = "0"
+        self.description = None
+        self.absences = "0"
+
+class Payment():
+    def __init__(self):
+        self.base_salary = None
+        self.benefits = Benefits()
+        self.deductions = Deductions()
+
+class Benefits():
+    def __init__(self):
+        self.total_benefits = None
+        self.high_performance = None
+        self.health_insurance = None
+        self.allowances = None
+        self.thirteenth_salary = None
+
+class Deductions():
+    def __init__(self):
+        self.total_deductions = None
+        self.poor_performance = None
+        self.inss_contribution = None
+        self.income_tax = None
+        self.absences = None
+
+def Add_Employee(employee_list):
+    while True:
+        new_employee = Employees()
+        Add_Information(new_employee.information)
+        evaluation = input("Do you want to Perform an Evaluation of the new Employee?\nYes or No: ").strip().lower()
+        if evaluation == "yes":
+            Perform_Employee_Evaluation(new_employee)
+        benefits = input("Do you want to Register the Employee's Benefits?\nYes or No: ").strip().lower()
+        if benefits == "yes":
+            Register_Benefits(new_employee)
+        deductions = input("Do you want to Register the Employee's Deductions?\nYes or No: ").strip().lower()
+        if deductions == "yes":
+            Register_Deductions(new_employee)
+        total_salary = input("Do you want to Register the Total Salary?\nYes or No: ").strip().lower()
+        if total_salary == "yes":
+            Register_Total_Salary(new_employee)
+        if(employee_list == None):
+            employee_list = new_employee
+        else:
+            current_employee = employee_list
+            while(current_employee.next_employee != None):
+                current_employee = current_employee.next_employee
+            current_employee.next_employee = new_employee
+            new_employee.previous_employee = current_employee
+        choice = (input("Do you want to continue Hiring employees(1)\nDo you want to exit(-1)\n\n"))
+        match choice:
+            case '-1':
+                return employee_list
+            case '1':
+                continue
+            case _:
+                print("Invalid option\n")
+
+def Remove_Employee(employee_list):
+    if employee_list == None:
+        print("There are no registered employees at the moment\n")
+        return
+    fired_employee = employee_list
+    while True:
+        search = input("Do you want to fire all employees or just a specific employee\n\n").strip().lower()
+        while True:
+            if search == "all":
+                return None
+            else:
+                if fired_employee.information.name == search:
+                    print(f"remove later the employee {fired_employee.information.name} was found")
+                    if fired_employee.previous_employee == None:
+                        fired_employee = fired_employee.next_employee
+                        print(f"The Employee {fired_employee.previous_employee.information.name} was successfully fired\n")
+                        fired_employee.previous_employee = None
+                        choice = (input("Do you want to continue firing employees(1)\nDo you want to exit(-1)\n\n"))
+                        match choice:
+                            case '-1':
+                                return fired_employee
+                            case '1':
+                                break
+                            case _:
+                                print("Invalid option")
+                    else:
+                        fired_employee.previous_employee.next_employee = fired_employee.next_employee
+                        print(f"The Employee {fired_employee.information.name} was successfully fired\n")
+                        choice = (input("Do you want to continue firing employees(1)\nDo you want to exit(-1)\n\n"))
+                        match choice:
+                            case '-1':
+                                return employee_list
+                            case '1':
+                                break
+                            case _:
+                                print("Invalid option")
+                elif fired_employee.next_employee == None:
+                    print("The searched Employee was not found, try again\n")
+                    choice = (input("Do you want to continue firing employees(1)\nDo you want to exit(-1)\n\n"))
+                    match choice:
+                        case '-1':
+                            return employee_list
+                        case '1':
+                            break
+                        case _:
+                            print("Invalid option")
+                else:
+                    fired_employee = fired_employee.next_employee
+
+def Add_Information(employee_information):
+    employee_information.name = input("Employee's full name: ")
+    employee_information.age = input("Employee's age: ")
+    employee_information.role = input("Employee's role: ")
+    employee_information.salary = input("Employee's salary: ")
+    employee_information.schedule = input("Employee's work hours: ")
+    employee_information.status = "Active"
+
+def Update_Information(employee_list):
+    if employee_list == None:
+        print("There are no registered employees at the moment\n\n")
+        return
+    updated_employee = employee_list
+    while True:
+        search = input("Do you want to update information for all employees or just a specific employee\n\n").strip().lower()
+        if search == "all":
+            while True:
+                Add_Information(updated_employee.information)
+                if updated_employee.next_employee == None:
+                    choice = (input("Do you want to continue updating employee information(1)\nDo you want to exit(-1)\n\n"))
+                    match choice:
+                        case '-1':
+                            return employee_list
+                        case '1':
+                            continue
+                        case _:
+                            print("Invalid option")
+                else:
+                    updated_employee = updated_employee.next_employee
+        else:
+            while True:
+                if updated_employee.information.name == search:
+                    Add_Information(updated_employee.information)
+                    choice = (input("Do you want to continue updating employee information(1)\nDo you want to exit(-1)\n\n"))
+                    match choice:
+                        case '-1':
+                            return employee_list
+                        case '1':
+                            break
+                elif updated_employee.next_employee == None:
+                    print("The searched Employee was not found, try again\n")
+                    choice = (input("Do you want to continue updating employee information(1)\nDo you want to exit(-1)\n\n"))
+                    match choice:
+                        case '-1':
+                            return
+                        case '1':
+                            continue
+                        case _:
+                            print("Invalid option\n\n")
+                else:
+                    updated_employee = updated_employee.next_employee
+
+def Perform_Employee_Evaluation(employee_list):
+    if employee_list == None:
+        print("There are no registered employees at the moment\n\n")
+        return
+    evaluated_employee = employee_list
+    while True:
+        search = input("Do you want to evaluate all employees or just a specific employee\n\n").strip().lower()
+        if search == "all":
+            while True:
+                Employee_Evaluation(evaluated_employee)
+                if evaluated_employee.next_employee == None:
+                    choice = (input("Do you want to continue evaluating employees(1)\nDo you want to exit(-1)\n\n"))
+                    match choice:
+                        case '-1':
+                            return employee_list
+                        case '1':
+                            break
+                        case _:
+                            print("Invalid option\n\n")
+                else:
+                    evaluated_employee = evaluated_employee.next_employee
+        else:
+            while True:
+                if evaluated_employee.information.name == search:
+                    Employee_Evaluation(evaluated_employee)
+                    choice = (input("Do you want to continue evaluating employees(1)\nDo you want to exit(-1)\n\n"))
+                    match choice:
+                        case '-1':
+                            return employee_list
+                        case '1':
+                            break
+                        case _:
+                            print("Invalid option\n\n")
+
+def Employee_Evaluation(evaluated_employee):
+    evaluated_employee.evaluation.grade = input(f"On a scale of zero to ten, how would you rate employee {evaluated_employee.information.name}: ")
+    evaluated_employee.evaluation.description = input(f"How would you describe employee {evaluated_employee.information.name}: ")
+    evaluated_employee.evaluation.absences = input(f"How many absences did employee {evaluated_employee.information.name} have this month: ")
+
+def Register_Total_Salary(employee_list):
+    if employee_list == None:
+        print("There are no registered employees at the moment\n\n")
+        return
+    Salary_employee = employee_list
+    while True:
+        search = input("Do you want to Calculate Total Salary for all employees or just a specific employee\n\n").strip().lower()
+        if search == "all":
+            while True:
+                Calculate_Total_Salary(Salary_employee)
+                if Salary_employee.next_employee == None:
+                    choice = (input("Do you want to continue Registering Total Salary for employees(1)\nDo you want to exit(-1)\n\n"))
+                    match choice:
+                        case '-1':
+                            return employee_list
+                        case '1':
+                            break
+                        case _:
+                            print("Invalid option\n\n")
+                else:
+                    Salary_employee = Salary_employee.next_employee
+        else:
+            while True:
+                if Salary_employee.information.name == search:
+                    Calculate_Total_Salary(Salary_employee)
+                    choice = (input("Do you want to continue Registering Salary for employees(1)\nDo you want to exit(-1)\n\n"))
+                    match choice:
+                        case '-1':
+                            return employee_list
+                        case '1':
+                            break
+                        case _:
+                            print("Invalid option\n\n")
+
+def Calculate_Total_Salary(Salary_employee):
+    base_salary = int(Salary_employee.information.salary)
+    benefits = Calculate_Benefits(Salary_employee)
+    deductions = Calculate_Deductions(Salary_employee)
+    total_salary = base_salary + benefits - deductions
+    Salary_employee.information.total_salary = total_salary
+    return total_salary
+
+def Register_Employee_Benefits(employee_list):
+    if employee_list == None:
+        print("There are no registered employees at the moment\n\n")
+        return
+    benefited_employee = employee_list
+    while True:
+        search = input("Do you want to Register Benefits for all employees or just a specific employee\n\n").strip().lower()
+        if search == "all":
+            while True:
+                Register_Benefits(benefited_employee)
+                if benefited_employee.next_employee == None:
+                    choice = (input("Do you want to continue Registering Benefits Received by employees(1)\nDo you want to exit(-1)\n\n"))
+                    match choice:
+                        case '-1':
+                            return employee_list
+                        case '1':
+                            break
+                        case _:
+                            print("Invalid option\n\n")
+                else:
+                    benefited_employee = benefited_employee.next_employee
+        else:
+            while True:
+                if benefited_employee.information.name == search:
+                    Register_Benefits(benefited_employee)
+                    choice = (input("Do you want to continue Registering Benefits Received by employees(1)\nDo you want to exit(-1)\n\n"))
+                    match choice:
+                        case '-1':
+                            return employee_list
+                        case '1':
+                            break
+                        case _:
+                            print("Invalid option\n\n")
+
+def Register_Benefits(benefited_employee):
+    benefited_employee.payment.benefits.high_performance = input(f"Does employee {benefited_employee.information.name} have high performance?\nYes or No: ").strip().lower()
+    benefited_employee.payment.benefits.health_insurance = input(f"Does employee {benefited_employee.information.name} have health insurance?\nYes or No: ").strip().lower()
+    benefited_employee.payment.benefits.allowances = input(f"Does employee {benefited_employee.information.name} Receive allowances?\nYes or No: ").strip().lower()
+    benefited_employee.payment.benefits.thirteenth_salary = input(f"Will employee {benefited_employee.information.name} receive the 13th salary this month?\nYes or No: ").strip().lower()
+
+def Calculate_Benefits(benefited_employee):
+    total_benefit = 0
+    if benefited_employee.payment.benefits.high_performance == "yes":
+        total_benefit = total_benefit + (int(benefited_employee.information.salary) / 100 * 50)
+    if benefited_employee.payment.benefits.health_insurance == "yes":
+        total_benefit = total_benefit + (int(benefited_employee.information.salary) / 100 * 20)
+    if benefited_employee.payment.benefits.allowances == "yes":
+        total_benefit = total_benefit + (int(benefited_employee.information.salary) / 100 * 15)
+    if benefited_employee.payment.benefits.high_performance == "yes":
+        total_benefit = total_benefit + (int(benefited_employee.information.salary) / 100 * 200)
+    benefited_employee.payment.benefits.total_benefits = total_benefit
+    return total_benefit
+
+def Register_Employee_Deductions(employee_list):
+    if employee_list == None:
+        print("There are no registered employees at the moment\n\n")
+        return
+    deducted_employee = employee_list
+    while True:
+        search = input("Do you want to Register Deductions for all employees or just a specific employee\n\n").strip().lower()
+        if search == "all":
+            while True:
+                Register_Deductions(deducted_employee)
+                if deducted_employee.next_employee == None:
+                    choice = (input("Do you want to continue Registering Deductions Received by employees(1)\nDo you want to exit(-1)\n\n"))
+                    match choice:
+                        case '-1':
+                            return employee_list
+                        case '1':
+                            break
+                        case _:
+                            print("Invalid option\n\n")
+                else:
+                    deducted_employee = deducted_employee.next_employee
+        else:
+            while True:
+                if deducted_employee.information.name == search:
+                    Register_Deductions(deducted_employee)
+                    choice = (input("Do you want to continue Registering Deductions Received by employees(1)\nDo you want to exit(-1)\n\n"))
+                    match choice:
+                        case '-1':
+                            return employee_list
+                        case '1':
+                            break
+                        case _:
+                            print("Invalid option\n\n")
+
+def Register_Deductions(deducted_employee):
+    deducted_employee.payment.deductions.poor_performance = input(f"Does employee {deducted_employee.information.name} Have Poor Performance?\nYes or No: ").strip().lower()
+    deducted_employee.payment.deductions.inss_contribution = input(f"Does employee {deducted_employee.information.name} Make INSS Contribution?\nYes or No: ").strip().lower()
+    deducted_employee.payment.deductions.income_
