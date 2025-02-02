@@ -1,0 +1,87 @@
+import Functions
+
+class Employees():
+    def __init__(self):
+        self.information = Information()
+        self.evaluation = Evaluation()
+        self.payment = Payment()
+        self.previous_employee = None
+        self.next_employee = None
+
+class Information():
+    def __init__(self):
+        self.name = None
+        self.age = None
+        self.position = None
+        self.total_salary = None
+        self.schedules = None
+        self.status = None
+
+class Evaluation():
+    def __init__(self):
+        self.score = None
+        self.description = None
+        self.absences = None
+
+class Payment():
+    def __init__(self):
+        self.base_salary = None
+        self.benefits = None
+        self.deductions = None
+
+print("Hello, welcome to the HR manager\n")
+employee_list = None
+while True:
+    choice_1 = input("""
+Select the desired option:
+View options (0)\n\n""")
+    match choice_1:
+        case '0':
+            print("""
+View Employee Information (1)
+View Salary, Benefits, and Deductions (2)
+Exit (-1)\n""")
+        case '1':
+            choice_2 = input("""
+View Employee List (1)
+Hire Employees (2)
+Fire Employees (3)
+Update Employee Profile (4)
+View Employee Evaluations (5)
+Evaluate Employees (6)
+Back (-1)\n\n""")
+            match choice_2:
+                case '1':
+                    employee_list = Functions.Print_Employee_Information(employee_list)
+                case '2':
+                    employee_list = Functions.Add_Employee(employee_list)
+                case '3':
+                    employee_list = Functions.Remove_Employee(employee_list)
+                case '4':
+                    employee_list = Functions.Update_Information(employee_list)
+                case '5':
+                    employee_list = Functions.Print_Employee_Evaluations(employee_list)
+                case '6':
+                    employee_list = Functions.Conduct_Employee_Evaluation(employee_list)
+                case '-1':
+                    continue
+                case _:
+                    print("Invalid option\n\n")
+        case '2':
+            choice_2 = input("""
+Register Total Salary (1)
+Register Benefits (2)
+Register Deductions (3)
+Back (-1)\n\n""")
+            match choice_2:
+                case '1':
+                    employee_list = Functions.Register_Total_Salary(employee_list)
+                case '2':
+                    employee_list = Functions.Register_Employee_Benefits(employee_list)
+                case '3':
+                    employee_list = Functions.Register_Employee_Deductions(employee_list)
+        case '-1':
+            print("Thank you for your preference :)")
+            break
+        case _:
+            print("Invalid option")
